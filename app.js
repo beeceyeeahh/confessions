@@ -4,6 +4,7 @@ import {
   query, where, getDocs, limit
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
+import { detectModelId, friendlyNameFor, formatDevice } from "./device-model.js?v=5";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -24,7 +25,7 @@ textBox.addEventListener("input", () => {
   counter.textContent = `${textBox.value.length} / 1000`;
 });
 
-function getDeviceDetails() {
+async function getDeviceDetails() {
   const ua = navigator.userAgent || "";
   const platform = navigator.userAgentData?.platform || navigator.platform || "Unknown";
   let browser = "Unknown browser";
@@ -39,15 +40,18 @@ function getDeviceDetails() {
     : /Mac OS/i.test(ua) ? "macOS"
     : /Linux/i.test(ua) ? "Linux" : platform;
 
-  return {
-    deviceType: /Mobi|Android|iPhone/i.test(ua) ? "Mobile" : "Desktop / tablet",
+  const deviceType = /Mobi|Android|iPhone/i.test(ua) ? "Mobile" : "Desktop / tablet";
+  const modelId = await detectModelId();
+  const deviceName = friendlyNameFor(modelId);
+  const details = {
+    deviceType,
     browser,
     os,
-    screen: `${window.screen?.width || "?"} × ${window.screen?.height || "?"}`,
-    language: navigator.language || "Unknown",
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown",
-    model: navigator.userAgentData?.model || "Not exposed by browser"
+    deviceName: deviceName || null,
+    modelId: modelId || null
   };
+  details.model = formatDevice(details);
+  return details;
 }
 
 function formatDate(value) {
@@ -134,7 +138,7 @@ postButton.addEventListener("click", async () => {
     // Save disclosed basic browser/device details separately.
     // A failure here does not undo or misreport the successful confession post.
     try {
-      const details = getDeviceDetails();
+      const details = await getDeviceDetails();
       const anonymousId = globalThis.crypto?.randomUUID
         ? globalThis.crypto.randomUUID()
         : `anon-${Date.now()}-${Math.random().toString(16).slice(2)}`;
