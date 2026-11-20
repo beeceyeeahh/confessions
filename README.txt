@@ -7,6 +7,8 @@ Included:
 - firebase-config.js: Firebase web configuration placeholder
 
 IMPORTANT DESIGN
-- The public page shows confession text, date and time only.
+- The page shows confession text, date and time only.
 - submissions are fully anonymous
 - Moderate submissions. Do not publish threats, bullying, private information, or targeted harassment.
+
+© 2026 beeceyeeahh
