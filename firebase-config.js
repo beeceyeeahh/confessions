@@ -2,7 +2,7 @@
 // Firebase configuration for the Class Confessions website.
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyCUV7bBjr1kY1NvhLhdH8H24_9DxCrdAhYk",
+  apiKey: "AIzaSyCUV7bBjrk1yNvhLhdH8H24_9DxCrdAhYk",
   authDomain: "confessionsbca.firebaseapp.com",
   projectId: "confessionsbca",
   storageBucket: "confessionsbca.firebasestorage.app",
