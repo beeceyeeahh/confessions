@@ -7,6 +7,7 @@ import {
   updateDoc, deleteDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 import { firebaseConfig, ADMIN_EMAIL } from "./firebase-config.js";
+import { formatDevice } from "./device-model.js?v=5";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -157,13 +158,10 @@ async function loadDashboard() {
       const anonId = item.privateDetails?.anonymousId || "Not available";
       const metadata = [
         ["Anonymous ID", anonId],
-        ["Device", detail.deviceType],
+        ["Device type", detail.deviceType],
+        ["Device model", item.privateDetails ? formatDevice(detail) : "Not available"],
         ["Operating system", detail.os],
-        ["Browser", detail.browser],
-        ["Screen", detail.screen],
-        ["Language", detail.language],
-        ["Timezone", detail.timezone],
-        ["Model", detail.model]
+        ["Browser", detail.browser]
       ];
       for (const [label, value] of metadata) {
         const row = document.createElement("div");
